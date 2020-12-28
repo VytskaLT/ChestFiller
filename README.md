@@ -63,4 +63,4 @@ ChestFiller.initRandom();
 ```
 I recommend you call that when your plugin is enabled.
 ## Installation
-I don't have a public maven repository, so I recommend to just copy the class to your own project. You'll also need the lombok dependency, so install it if you don't have it already.
+I don't have a public maven repository, so I recommend to just copy the class to your own project. You'll also need the lombok dependency, so install it if you didn't have it already.
