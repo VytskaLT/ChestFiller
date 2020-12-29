@@ -64,3 +64,5 @@ ChestFiller.initRandom();
 I recommend you call that when your plugin is enabled.
 ## Installation
 I don't have a public maven repository, so just copy [the class](https://github.com/VytskaLT/ChestFiller/blob/master/src/main/java/net/VytskaLT/ChestFiller/ChestFiller.java) to your project. You'll also need the Lombok dependency, so install it if you didn't have it already.
+## Contribution
+If you have an idea for how the library could be better, please make a PR or an issue.
