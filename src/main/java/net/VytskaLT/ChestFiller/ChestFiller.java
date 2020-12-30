@@ -103,7 +103,29 @@ public class ChestFiller {
             try {
                 byte x = 0;
                 for (JsonElement items : itemsArray) {
-                    itemEntries[x] = Objects.requireNonNull(parseItem(items));
+                    if (items.isJsonObject()) {
+                        JsonObject obj = (JsonObject) items;
+                        Material material;
+                        short data;
+                        Object2ByteOpenHashMap<Enchantment> enchantments = null;
+
+                        material = Material.valueOf(obj.get("id").getAsString());
+                        try {
+                            data = obj.get("data").getAsShort();
+                        } catch (Exception ignored) {
+                            data = 0;
+                        }
+                        try {
+                            JsonObject enchantmentsObject = obj.get("enchantments").getAsJsonObject();
+                            enchantments = new Object2ByteOpenHashMap<>();
+                            for (Map.Entry<String, JsonElement> entry : enchantmentsObject.entrySet())
+                                enchantments.put(Enchantment.getByName(entry.getKey()), entry.getValue().getAsByte());
+                        } catch (Exception ignored) {
+                        }
+
+                        itemEntries[x] = new Item(material, data, enchantments);
+                    } else itemEntries[x] = new Item(Material.getMaterial(items.getAsString()), (short) 0, null);
+
                     x++;
                 }
             } catch (Exception e) {
@@ -203,31 +225,6 @@ public class ChestFiller {
         }
 
         return true;
-    }
-
-    private Item parseItem(JsonElement element) {
-        if (element.isJsonObject()) {
-            JsonObject object = (JsonObject) element;
-            Material material;
-            short data;
-            Object2ByteOpenHashMap<Enchantment> enchantments = null;
-
-            material = Material.valueOf(object.get("id").getAsString());
-            try {
-                data = object.get("data").getAsShort();
-            } catch (Exception ignored) {
-                data = 0;
-            }
-            try {
-                JsonObject enchantmentsObject = object.get("enchantments").getAsJsonObject();
-                enchantments = new Object2ByteOpenHashMap<>();
-                for (Map.Entry<String, JsonElement> entry : enchantmentsObject.entrySet())
-                    enchantments.put(Enchantment.getByName(entry.getKey()), entry.getValue().getAsByte());
-            } catch (Exception ignored) {
-            }
-
-            return new Item(material, data, enchantments);
-        } else return new Item(Material.getMaterial(element.getAsString()), (short) 0, null);
     }
 
     @Value
